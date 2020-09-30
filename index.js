@@ -75,6 +75,8 @@ let totalCost = 0;
 
 function arrayHandler() {
   for (let i = 0; i < array.length; i += 1) {
+    const price = array[i].price || array[i].priceForPair;
+
     if (array[i].type === 'socks' && array[i].quantity) {
       socksQuantity += array[i].quantity;
     }
@@ -83,23 +85,20 @@ function arrayHandler() {
       redHatsQuantity += array[i].quantity;
     }
 
-    const price = array[i].price || array[i].priceForPair;
-    const commonPrice = array[i].price + array[i].priceForPair;
-
     if (array[i].color === 'red' && price) {
-      costRed += Number(regexp.exec(commonPrice));
+      costRed += Number(regexp.exec(price));
     }
 
     if (array[i].color === 'green' && price) {
-      costGreen += Number(regexp.exec(commonPrice));
+      costGreen += Number(regexp.exec(price));
     }
 
     if (array[i].color === 'blue' && price) {
-      costBlue += Number(regexp.exec(commonPrice));
+      costBlue += Number(regexp.exec(price));
     }
 
     if (price) {
-      totalCost += Number(regexp.exec(commonPrice));
+      totalCost += Number(regexp.exec(price));
     }
   }
   console.log(`Socks - ${socksQuantity}`);

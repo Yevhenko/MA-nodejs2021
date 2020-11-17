@@ -1,9 +1,10 @@
 const { task1 } = require('../previousHomework/tasks');
-const array = require('../array.json');
+const { success } = require('../utils');
+const array = require('../clothes.json');
 
 function getTask1(response, queryParams) {
-  console.log(task1(array, JSON.stringify(queryParams)));
-  response.writeHead(200).end('Success!');
+  const data = task1(array, JSON.stringify(queryParams));
+  success(response, data);
 }
 
 module.exports = { getTask1 };

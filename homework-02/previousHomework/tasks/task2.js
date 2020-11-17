@@ -1,17 +1,18 @@
 /* eslint-disable max-len */
-const testArray = require('../../array.json');
+const testArray = require('../../clothes.json');
 
 function filterByPrice(array) {
   const theMostExpensiveGood = { theBiggestPrice: 0, goods: {} };
   const regexp = new RegExp(/\d+/);
-  for (let i = 0; i < array.length; i += 1) {
-    // eslint-disable-next-line prettier/prettier
-    const price = Number(regexp.exec(array[i].price || array[i].priceForPair)) * array[i].quantity || 0;
+  array.forEach((element) => {
+    const quantity = element.quantity || 0;
+    const price = Number(regexp.exec(element.price || element.priceForPair)) * quantity;
     if (price > theMostExpensiveGood.theBiggestPrice) {
       theMostExpensiveGood.theBiggestPrice = price;
-      theMostExpensiveGood.goods = array[i];
+      theMostExpensiveGood.goods = element;
     }
-  }
+  });
+
   return theMostExpensiveGood.goods;
 }
 

@@ -1,8 +1,8 @@
-const { task2 } = require('../previousHomework/tasks');
+const { filterByPrice } = require('../previousHomework');
 const { success } = require('../utils');
 
 function getTask2(response) {
-  const data = task2;
+  const data = filterByPrice;
   success(response, data);
 }
 

@@ -8,26 +8,9 @@ module.exports = (request, response) => {
   // eslint-disable-next-line object-curly-newline
   const { method, url, queryParams, body } = request;
 
-  switch (url.pathname) {
-    case '/task1':
-      if (method === 'GET' && queryParams) getTask1(response, queryParams);
-      else notFound(response);
-      break;
-    case '/task2':
-      if (method === 'GET') getTask2(response);
-      else notFound(response);
-      break;
-    case '/task3':
-      if (method === 'GET') getTask3(response);
-      else notFound(response);
-      break;
-    case '/newArray':
-      if (method === 'POST') setNewArray(response, body);
-      else notFound(response);
-      break;
-
-    default:
-      notFound(response);
-      break;
-  }
+  if (method === 'GET' && url.pathname === '/task1') getTask1(response, queryParams);
+  else if (method === 'GET' && url.pathname === '/task2') getTask2(response);
+  else if (method === 'GET' && url.pathname === '/task3') getTask3(response);
+  else if (method === 'POST' && url.pathname === '/newArray') setNewArray(response, body);
+  else notFound(response);
 };

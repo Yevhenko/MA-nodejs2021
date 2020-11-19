@@ -23,14 +23,15 @@ function filterByPrice(array) {
 }
 
 function regulateAnArray(array) {
-  return array.map((e) => {
-    const sampleOfTheElement = {};
-    sampleOfTheElement.type = e.type;
-    sampleOfTheElement.color = e.color;
-    sampleOfTheElement.quantity = e.quantity || 0;
-    sampleOfTheElement.price = e.price || e.priceForPair;
-
-    return sampleOfTheElement;
+  const theMostExpensiveGood = { theBiggestPrice: 0, goods: {} };
+  const regexp = new RegExp(/\d+/);
+  array.forEach((element) => {
+    const quantity = element.quantity || 0;
+    const price = Number(regexp.exec(element.price || element.priceForPair)) * quantity;
+    if (price > theMostExpensiveGood.theBiggestPrice) {
+      theMostExpensiveGood.theBiggestPrice = price;
+      theMostExpensiveGood.goods = element;
+    }
   });
 }
 

@@ -1,7 +1,18 @@
-module.exports = (request, response) => {
-  // eslint-disable-next-line object-curly-newline
-  const { method, url, queryParams, body } = request;
+const { notFound } = require("../utils");
 
-  if (method === 'GET' && url.pathname === '/calculateDiscount1') getTask1(response, queryParams);
+const { calculateDiscountCallback, calculateDiscountAsync, calculateDiscountPromise } = require('./controller');
+
+
+module.exports = async (request, response) => {
+  // eslint-disable-next-line object-curly-newline
+  const { method, url,  body } = request;
+
+  if (method === 'POST' && url.pathname === '/calculateDiscountCallback') {
+     calculateDiscountCallback(response, body);
+  } else if (method === 'POST' && url.pathname === '/calculateDiscountPromise') {
+    calculateDiscountPromise(response, body);
+  } else if (method === 'POST' && url.pathname === '/calculateDiscountAsync') {
+    await calculateDiscountAsync(response, body);
+  }
   else notFound(response);
 };

@@ -9,4 +9,4 @@ function myMap(array, callback) {
   return newArray;
 }
 
-myMap(arr, (number) => console.log(number));
+module.exports = { myMap };

@@ -1,4 +1,9 @@
-const { getCallbackDiscount, getAsyncDiscount, getPromiseDiscount } = require('../generateDiscount');
+/* eslint-disable no-param-reassign */
+const {
+  getCallbackDiscount,
+  getAsyncDiscount,
+  getPromiseDiscount,
+} = require('../generateDiscount');
 const { myMap } = require('../myMap');
 const { arrayModifier } = require('../utils');
 
@@ -15,7 +20,7 @@ function calculateDiscountCallback(response, body) {
       sampleOfTheElement.type = good.type;
       sampleOfTheElement.color = good.color;
       sampleOfTheElement.quantity = good.quantity || 0;
-      
+
       let theNumberOfDiscounts = 1;
       if (sampleOfTheElement.type === 'hat') {
         theNumberOfDiscounts = 2;
@@ -24,11 +29,11 @@ function calculateDiscountCallback(response, body) {
         }
       }
 
-      let propperDiscounts = [];
+      const propperDiscounts = [];
 
       getCallbackDiscount(theNumberOfDiscounts, propperDiscounts, (element) => {
         sampleOfTheElement.price = price * element.reduce((acc, cur) => acc * (1 - cur / 100), 1);
-        data.push(sampleOfTheElement)
+        data.push(sampleOfTheElement);
 
         if (data.length === body.length) {
           response.writeHead(200);
@@ -43,11 +48,11 @@ function calculateDiscountPromise(response, body) {
   if (!body) {
     response.writeHead(500).end();
   } else {
-    const data = []; 
-    
+    const data = [];
+
     myMap(body, (good) => {
       const regexp = new RegExp(/\d+/);
-      let sampleOfTheElement = {};
+      const sampleOfTheElement = {};
       const price = Number(regexp.exec(good.price || good.priceForPair));
       sampleOfTheElement.type = good.type;
       sampleOfTheElement.color = good.color;
@@ -61,9 +66,9 @@ function calculateDiscountPromise(response, body) {
         }
       }
 
-      getPromiseDiscount(theNumberOfDiscounts).then(discount => {
-        discount = discount.reduce((acc, cur) => acc * (1 - cur / 100), 1);
-        sampleOfTheElement.price = price * discount;
+      getPromiseDiscount(theNumberOfDiscounts).then((discount) => {
+        const newDiscount = discount.reduce((acc, cur) => acc * (1 - cur / 100), 1);
+        sampleOfTheElement.price = price * newDiscount;
 
         data.push(sampleOfTheElement);
 
@@ -71,7 +76,7 @@ function calculateDiscountPromise(response, body) {
           response.writeHead(200);
           response.end(JSON.stringify(data));
         }
-      })
+      });
     });
   }
 }
@@ -82,10 +87,10 @@ async function calculateDiscountAsync(response, body) {
       response.writeHead(500).end();
     } else {
       const modifiedArray = arrayModifier(body);
-      const returningArray = myMap(modifiedArray, async good => {
+      const returningArray = myMap(modifiedArray, async (good) => {
         const regexp = new RegExp(/\d+/);
         good.price = Number(regexp.exec(good.price));
-          
+
         let discount = 1 - (await getAsyncDiscount()) / 100;
         if (good.type === 'hat') {
           discount *= 1 - (await getAsyncDiscount()) / 100;
@@ -99,7 +104,7 @@ async function calculateDiscountAsync(response, body) {
       });
 
       const data = await Promise.all(returningArray);
-      
+
       response.writeHead(200);
       response.end(JSON.stringify(data));
     }

@@ -20,6 +20,7 @@ function getCallbackDiscount(theNumberOfDiscounts, propperDiscounts, callback) {
     } else {
       propperDiscounts.push(result);
     }
+
     if (propperDiscounts.length < theNumberOfDiscounts) {
       getCallbackDiscount(theNumberOfDiscounts, propperDiscounts, callback);
     } else {

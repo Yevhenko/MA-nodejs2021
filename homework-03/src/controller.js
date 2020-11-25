@@ -6,31 +6,36 @@ function calculateDiscountCallback(response, body) {
   if (!body) {
     response.writeHead(500).end();
   } else {
-    const data = myMap(body, (good) => {
+    const data = [];
+
+    myMap(body, (good) => {
       const regexp = new RegExp(/\d+/);
-      let sampleOfTheElement = {};
+      const sampleOfTheElement = {};
       const price = Number(regexp.exec(good.price || good.priceForPair));
       sampleOfTheElement.type = good.type;
       sampleOfTheElement.color = good.color;
       sampleOfTheElement.quantity = good.quantity || 0;
-      let propperDiscounts = [];
+      
       let theNumberOfDiscounts = 1;
-        if (sampleOfTheElement.type === 'hat') {
-          theNumberOfDiscounts = 2;
-          if (sampleOfTheElement.color === 'red') {
-            theNumberOfDiscounts = 3;
-          }
+      if (sampleOfTheElement.type === 'hat') {
+        theNumberOfDiscounts = 2;
+        if (sampleOfTheElement.color === 'red') {
+          theNumberOfDiscounts = 3;
         }
+      }
+
+      let propperDiscounts = [];
+
       getCallbackDiscount(theNumberOfDiscounts, propperDiscounts, (element) => {
-        const priceWithDiscount = price * element.reduce((acc, cur) => acc * (1 - cur / 100), 1);
-        sampleOfTheElement.price = priceWithDiscount;
+        sampleOfTheElement.price = price * element.reduce((acc, cur) => acc * (1 - cur / 100), 1);
+        data.push(sampleOfTheElement)
+
+        if (data.length === body.length) {
+          response.writeHead(200);
+          response.end(JSON.stringify(data));
+        }
       });
-
-      return sampleOfTheElement;
-
     });
-    response.writeHead(200);
-    response.end(JSON.stringify(data));
   }
 }
 

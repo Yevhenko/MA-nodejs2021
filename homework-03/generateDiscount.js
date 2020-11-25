@@ -12,6 +12,13 @@ function generateDiscount(callback) {
   }, 50);
 };
 
+function discountWrapper(callback) {
+  generateDiscount((err, result) => {
+    if (err) return discountWrapper(callback);
+    else return callback(null, result);
+  });
+};
+
 function getCallbackDiscount(theNumberOfDiscounts, propperDiscounts, callback) {
 
   generateDiscount((err, result) => {
@@ -32,9 +39,9 @@ function getCallbackDiscount(theNumberOfDiscounts, propperDiscounts, callback) {
 
 function promiseDiscount() {
   return new Promise((res, rej) => {
-    generateDiscount((error, result) => {
-      if (error){
-         rej(error);
+    discountWrapper((err, result) => {
+      if (err) {
+        rej(err);
       } else {
         res(result);
       }
@@ -42,19 +49,16 @@ function promiseDiscount() {
   });
 };
 
-const callbackPromisified = promisify(getCallbackDiscount);
+function getPromiseDiscount(theNumberOfDiscounts) {
+  const quantityOfTHePromises = [];
 
-function getPromiseDiscount(theNumberOfDiscounts, propperDiscounts, callback) {
-  callbackPromisified()
-  .then(d => {
-    propperDiscounts.push(d);
-    if (propperDiscounts.length < theNumberOfDiscounts) {
-      getPromiseDiscount(theNumberOfDiscounts, propperDiscounts, callback);
-    } else {
-      callback(propperDiscounts);
+  while (quantityOfTHePromises.length < theNumberOfDiscounts) {
+    quantityOfTHePromises.push(promiseDiscount());
   }
-})
-  .catch(() => getPromiseDiscount(theNumberOfDiscounts, propperDiscounts, callback));
+
+  return Promise.all(quantityOfTHePromises);
+    // .then(d => d)
+    // .catch(() => getPromiseDiscount(theNumberOfDiscounts));
 };
 
 async function getAsyncDiscount() {

@@ -61,18 +61,17 @@ function calculateDiscountPromise(response, body) {
         }
       }
 
-      let propperDiscounts = [];
+      getPromiseDiscount(theNumberOfDiscounts).then(discount => {
+        discount = discount.reduce((acc, cur) => acc * (1 - cur / 100), 1);
+        sampleOfTheElement.price = price * discount;
 
-      getPromiseDiscount(theNumberOfDiscounts, propperDiscounts, (element) => {
-        sampleOfTheElement.price = price * element.reduce((acc, cur) => acc * (1 - cur / 100), 1);
-        data.push(sampleOfTheElement)
+        data.push(sampleOfTheElement);
 
         if (data.length === body.length) {
           response.writeHead(200);
           response.end(JSON.stringify(data));
         }
-      });
-
+      })
     });
   }
 }

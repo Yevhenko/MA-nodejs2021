@@ -3,8 +3,8 @@ const { promisify } = require('util');
 function generateDiscount(callback) {
   setTimeout(() => {
     const discount = Math.floor(Math.random() * 99) + 1;
-    if (discount > 20) {
-      return callback(new Error());
+    if (discount >= 20) {
+      return callback(new Error('error'));
     } else {
       return callback(null, discount);
     }
@@ -64,6 +64,7 @@ async function getAsyncDiscount() {
     } catch (error) {
       res = await getAsyncDiscount();
     }
+
     return res;
   };
 

@@ -43,31 +43,37 @@ function calculateDiscountPromise(response, body) {
   if (!body) {
     response.writeHead(500).end();
   } else {
-    const data = myMap(body, (good) => {
+    const data = []; 
+    
+    myMap(body, (good) => {
       const regexp = new RegExp(/\d+/);
       let sampleOfTheElement = {};
       const price = Number(regexp.exec(good.price || good.priceForPair));
       sampleOfTheElement.type = good.type;
       sampleOfTheElement.color = good.color;
       sampleOfTheElement.quantity = good.quantity || 0;
-      let propperDiscounts = [];
+
       let theNumberOfDiscounts = 1;
-        if (sampleOfTheElement.type === 'hat') {
-          theNumberOfDiscounts = 2;
-          if (sampleOfTheElement.color === 'red') {
-            theNumberOfDiscounts = 3;
-          }
+      if (sampleOfTheElement.type === 'hat') {
+        theNumberOfDiscounts = 2;
+        if (sampleOfTheElement.color === 'red') {
+          theNumberOfDiscounts = 3;
         }
+      }
+
+      let propperDiscounts = [];
+
       getPromiseDiscount(theNumberOfDiscounts, propperDiscounts, (element) => {
-        const priceWithDiscount = price * element.reduce((acc, cur) => acc * (1 - cur / 100), 1);
-        sampleOfTheElement.price = priceWithDiscount;
+        sampleOfTheElement.price = price * element.reduce((acc, cur) => acc * (1 - cur / 100), 1);
+        data.push(sampleOfTheElement)
+
+        if (data.length === body.length) {
+          response.writeHead(200);
+          response.end(JSON.stringify(data));
+        }
       });
 
-      return sampleOfTheElement;
-
     });
-    response.writeHead(200);
-    response.end(JSON.stringify(data));
   }
 }
 
@@ -76,27 +82,30 @@ async function calculateDiscountAsync(response, body) {
     if (!body) {
       response.writeHead(500).end();
     } else {
-      const modifiedArray = await arrayModifier(body);
+      const modifiedArray = arrayModifier(body);
       const returningArray = myMap(modifiedArray, async good => {
-      const regexp = new RegExp(/\d+/);
-      const price = Number(regexp.exec(good.price));
-        
-          good.discount = 1 - (await getAsyncDiscount()) / 100;
-          if (good.type === 'hat') {
-            good.discount *= 1 - (await getAsyncDiscount()) / 100;
-            if (good.color === 'red') {
-              good.discount *= 1 - (await getAsyncDiscount()) / 100;
-            }
+        const regexp = new RegExp(/\d+/);
+        good.price = Number(regexp.exec(good.price));
+          
+        let discount = 1 - (await getAsyncDiscount()) / 100;
+        if (good.type === 'hat') {
+          discount *= 1 - (await getAsyncDiscount()) / 100;
+          if (good.color === 'red') {
+            discount *= 1 - (await getAsyncDiscount()) / 100;
           }
-          good.price = price;
+        }
+        good.price *= discount;
+
         return good;
       });
+
+      const data = await Promise.all(returningArray);
       
       response.writeHead(200);
-      response.end(JSON.stringify(Promise.all(returningArray)));
+      response.end(JSON.stringify(data));
     }
   } catch (error) {
-    response.writeHead(500).end();
+    response.writeHead(500).end('error');
   }
 }
 

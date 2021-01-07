@@ -3,14 +3,13 @@ const { getListOfFiles } = require('../controller');
 
 const listOfFiles = express.Router();
 
-listOfFiles.get('/listOfFiles', async (req, res) => {
+listOfFiles.get('/listOfFiles', async (req, res, next) => {
   try {
     await getListOfFiles(res);
 
-    return res.end('Success!');
+    res.end('Success!');
   } catch (error) {
-    console.error(error);
-    return res.status(500).send('error');
+    next(error);
   }
 });
 

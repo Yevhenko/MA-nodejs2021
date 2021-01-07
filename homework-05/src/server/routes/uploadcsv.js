@@ -3,14 +3,13 @@ const { uploadCsv } = require('../controller');
 
 const uploadcsv = express.Router();
 
-uploadcsv.put('/uploadcsv', async (req, res) => {
+uploadcsv.put('/uploadcsv', async (req, res, next) => {
   try {
     await uploadCsv(req);
 
-    return res.end('Success!');
+    res.end('Success!');
   } catch (error) {
-    console.error(error);
-    return res.status(500).send('error');
+    next(error);
   }
 });
 

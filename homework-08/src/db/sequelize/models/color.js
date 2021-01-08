@@ -3,15 +3,8 @@ module.exports = (sequelize, DataTypes) => {
   const Color = sequelize.define(
     'Color',
     {
-      colorName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      deletedAt: {
-        type: DataTypes.DATE,
-        allowNull: true,
-        defaultValue: null,
-      },
+      colorName: DataTypes.STRING,
+      deletedAt: DataTypes.DATE,
     },
     {},
   );

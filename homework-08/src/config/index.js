@@ -46,7 +46,7 @@ const config = {
           acquire: 5000,
           evict: 5000,
         },
-        logging: true,
+        logging: false,
       },
     },
   },

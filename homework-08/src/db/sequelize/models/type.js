@@ -3,15 +3,8 @@ module.exports = (sequelize, DataTypes) => {
   const Type = sequelize.define(
     'Type',
     {
-      typeName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      deletedAt: {
-        type: DataTypes.DATE,
-        allowNull: true,
-        defaultValue: null,
-      },
+      typeName: DataTypes.STRING,
+      deletedAt: DataTypes.DATE,
     },
     {},
   );

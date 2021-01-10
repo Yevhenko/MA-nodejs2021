@@ -24,11 +24,23 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         unique: true,
+        references: {
+          model: {
+            tableName: 'Types',
+          },
+          key: 'id',
+        },
       },
       colorId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         unique: true,
+        references: {
+          model: {
+            tableName: 'Colors',
+          },
+          key: 'id',
+        },
       },
       deletedAt: {
         type: Sequelize.DATE,

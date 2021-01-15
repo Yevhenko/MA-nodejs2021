@@ -62,6 +62,8 @@ const config = {
   refreshSecret: process.env.REFRESH,
   tokenLife: 60,
   refreshTokenLife: 120,
+  username: 'John',
+  password: 'kkk',
 };
 
 module.exports = config;

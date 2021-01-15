@@ -8,44 +8,6 @@ const {
 
 const db = require('../db');
 
-const { User } = require('../db/sequelize/models/user');
-
-async function findUser(query) {
-  try {
-    const user = await User.findOne({
-      where: {
-        username: query.username,
-        password: query.password,
-        token: query.token,
-      },
-    });
-    return user;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-}
-
-async function createToken(query, token) {
-  try {
-    await User.update(
-      {
-        token,
-      },
-      {
-        where: {
-          id: query.username,
-        },
-      },
-    );
-
-    return 'Token has been saved!';
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-}
-
 async function createProduct(body) {
   try {
     const product = await db.createProduct({
@@ -122,6 +84,4 @@ module.exports = {
   updateProduct,
   deleteProduct,
   fromJSONtoDB,
-  createToken,
-  findUser,
 };

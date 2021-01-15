@@ -1,41 +1,37 @@
-const { query } = require('express');
 const express = require('express');
 
 const jwt = require('jsonwebtoken');
 
-// eslint-disable-next-line object-curly-newline
-const { accessSecret, refreshSecret, tokenLife, refreshTokenLife } = require('../../config');
-
-const { createToken, findUser } = require('../controller');
+const {
+  accessSecret,
+  refreshSecret,
+  tokenLife,
+  refreshTokenLife,
+  username: usrnm,
+  password: pswrd,
+} = require('../../config');
 
 const loginAndRefresh = express.Router();
 
-const user = findUser(query);
+let tokenList = {};
 
 loginAndRefresh.post('/login', async (req, res, next) => {
   try {
-    const {
-      query: { username, password },
-    } = req.body;
-
-    if (!username || !password) {
-      res.status(404).send('Not found');
-    }
-
-    if (user.username !== username || user.password !== password) {
+    const { username, password } = req.body;
+    if (usrnm !== username || pswrd !== password) {
       throw new Error('username or password is incorrect!');
     }
 
     const accessToken = jwt.sign({ username }, accessSecret, { expiresIn: tokenLife });
     const refreshToken = jwt.sign({ username }, refreshSecret, { expiresIn: refreshTokenLife });
 
-    await createToken(query, refreshToken);
-
     const response = {
       message: 'Logged in',
       accessToken,
       refreshToken,
     };
+
+    tokenList = response;
 
     res.json({ response });
   } catch (err) {
@@ -45,32 +41,26 @@ loginAndRefresh.post('/login', async (req, res, next) => {
 
 loginAndRefresh.post('/refresh', async (req, res, next) => {
   try {
-    const {
-      query: { username, password, refreshToken: token },
-    } = req.body;
+    const { username, password, refreshToken: token } = req.body;
 
-    if (!username || !password) {
-      res.status(404).send('Not found');
-    }
-
-    if (user.username !== username || user.password !== password) {
+    if (usrnm !== username || pswrd !== password) {
       throw new Error('username or password is incorrect!');
     }
 
-    if (token !== user.token) {
+    if (token !== tokenList.refreshToken) {
       throw new Error('refreshToken is invalid!');
     }
 
     const accessToken = jwt.sign({ username }, accessSecret, { expiresIn: tokenLife });
-    const newRefreshToken = jwt.sign({ username }, refreshSecret, { expiresIn: refreshTokenLife });
+    const refreshToken = jwt.sign({ username }, refreshSecret, { expiresIn: refreshTokenLife });
 
     const response = {
       message: 'refreshed',
       accessToken,
-      newRefreshToken,
+      refreshToken,
     };
 
-    await createToken(query, newRefreshToken);
+    tokenList = response;
 
     res.json({ response });
   } catch (err) {

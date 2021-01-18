@@ -21,7 +21,7 @@ const config = {
         },
         debug: false,
         migrations: {
-          tableName: 'knex_migrations',
+          tableName: 'migrations',
         },
       },
     },

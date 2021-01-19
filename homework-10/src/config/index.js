@@ -7,7 +7,7 @@ const config = {
   db: {
     config: {
       knex: {
-        client: 'pg',
+        client: 'postgresql',
         connection: {
           user: process.env.DB_USER || fatal('user not defined'),
           host: process.env.DB_HOST || fatal('host not defined'),
@@ -21,7 +21,8 @@ const config = {
         },
         debug: false,
         migrations: {
-          tableName: 'migrations',
+          tableName: 'knex_migrations',
+          directory: 'src/db/migrations',
         },
       },
     },

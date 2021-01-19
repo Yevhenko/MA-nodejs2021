@@ -1,6 +1,10 @@
 const Knex = require('knex');
-const config = require('../config').db;
+const {
+  db: {
+    config: { knex: options },
+  },
+} = require('../config');
 
-const knex = new Knex(config);
+const knex = new Knex(options);
 
 module.exports = knex;

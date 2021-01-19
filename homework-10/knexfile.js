@@ -4,7 +4,7 @@ const {
   db: {
     config: { knex },
   },
-} = require('../config');
+} = require('./src/config');
 
 module.exports = {
   development: knex,

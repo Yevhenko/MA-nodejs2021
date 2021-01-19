@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
-const knex = require('../index');
-const { database } = require('../../config').db;
+const knex = require('./index');
+const { database } = require('../config').db;
 
 async function createTables() {
   try {

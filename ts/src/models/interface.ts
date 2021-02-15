@@ -24,19 +24,3 @@ export interface Lesson {
   subject: Subject;
   needTechEquipment: boolean;
 }
-
-export interface Config {
-  type: string;
-  host: string;
-  port: number;
-  username: string;
-  password: string;
-  database: string;
-  synchronize: boolean;
-  logging: boolean;
-  entities: Array<string>;
-  migrations: Array<string>;
-  subscribers: Array<string>;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  cli?: Object;
-}

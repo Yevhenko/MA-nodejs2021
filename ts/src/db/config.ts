@@ -12,7 +12,7 @@ export interface DbConfig {
 }
 
 let dbConfig: DbConfig = {
-  host: '',
+  host: 'db_postgres',
   port: 5432,
   database: '',
   username: '',

@@ -1,68 +1,68 @@
 import express from 'express';
-import {createTeacher} from '../controller';
+import { createTeacher, updateTeacher, getTeacher, deleteTeacher } from '../controller';
 
 const teacher = express.Router();
 
 teacher.post('/teacher', async (req, res, next) => {
-    try {
-        const { body } = req;
+  try {
+    const { body } = req;
 
-        if (!body) res.sendStatus(404).send('no body');
+    if (!body) res.sendStatus(404).send('no body');
 
-        const response = await createTeacher(body);
+    const response = await createTeacher(body);
 
-        res.json(response);
-    } catch (error) {
-            next(error);
-    }
+    res.json(response);
+  } catch (error) {
+    next(error);
+  }
 });
 
-// teacher.put('/teacher', async (req, res, next) => {
-//     try {
-//         const { body } = req;
+teacher.put('/teacher', async (req, res, next) => {
+  try {
+    const { body, query } = req;
 
-//         if (!body) res.sendStatus(404).send('no body');
+    const teacherId = Number(query.id);
 
-//         const response = await updateTeacher(body);
-        
-//         res.send('Teacher has been updated');
-//     } catch (error) {
-//         next(error);
-//     }
-// });
+    if (!body && !teacherId) res.sendStatus(404).send('no body');
 
-// teacher.delete('/teacher', async (req, res, next) => {
-//     try {
-//         const { query } = req;
+    const response = await updateTeacher(query, body);
 
-//         const teacherId = Number(query.id);
+    res.json(response);
+  } catch (error) {
+    next(error);
+  }
+});
 
-//         if(!teacherId) res.sendStatus(404).send('id not found');
+teacher.delete('/teacher', async (req, res, next) => {
+  try {
+    const { query } = req;
 
-//         await deleteTeacher(query);
+    const teacherId = Number(query.id);
 
-//         res.send('Teacher has been deleted');
+    if (!teacherId) res.sendStatus(404).send('id not found');
 
+    await deleteTeacher(query);
 
-//     } catch (error: any) {
-//         next(error);
-//     }
-// });
+    res.send('Teacher has been deleted');
+  } catch (error) {
+    next(error);
+  }
+});
 
-// teacher.get('/teacher', async (req, res, next) => {
-//     try {
-//         const { query } = req;
+teacher.get('/teacher', async (req, res, next) => {
+  try {
+    const { query } = req;
 
-//         const teacherId = Number(query.id);
+    const teacherId = Number(query.id);
 
-//         if(!teacherId) res.sendStatus(404).send('id not found');
+    if (!teacherId) res.sendStatus(404).send('id not found');
 
-//         const response = await getTeacher(query);
+    const response = await getTeacher(query);
 
-//         res.json(response);
-//     } catch (error) {
-//         next(error);
-//     }
-// });
+    res.json(response);
+  } catch (error) {
+    next(error);
+  }
+});
 
 export = teacher;

@@ -1,0 +1,15 @@
+const express = require('express');
+
+const loginAndRefresh = require('./loginAndRefresh');
+const test = require('./test');
+const { errorHandler } = require('../../utils/errorHandler');
+const { authenticate } = require('../../utils/auth');
+
+const router = express.Router();
+
+router.use(loginAndRefresh);
+router.use(authenticate);
+router.use(test);
+router.use(errorHandler);
+
+module.exports = router;
